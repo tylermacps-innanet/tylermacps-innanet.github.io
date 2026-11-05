@@ -133,7 +133,37 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 .map-note i{width:8px;height:8px;border-radius:50%;flex:none}
 .map-note i + * , .map-note i:not(:first-child){margin-left:8px}
 .map-labels{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;visibility:hidden}
-.map-label{position:absolute;left:0;top:0;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:600;line-height:1.2;color:#fff;white-space:nowrap;background:rgba(4,10,28,.82);border:1px solid rgba(255,210,122,.45)}
+.map-label{position:absolute;left:0;top:0;padding:4px 9px;border-radius:999px;font:600 12px/1.2 var(--font);color:#fff;white-space:nowrap;background:rgba(4,10,28,.82);border:1px solid rgba(255,210,122,.45);cursor:pointer}
+.map-pin{position:absolute;left:0;top:0;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer}
+.map-labels.live .map-label,.map-labels.live .map-pin,.map-pop{pointer-events:auto}
+.map-pop[hidden]{display:none}
+.map-label:hover,.map-label[aria-expanded="true"]{border-color:#ffd27a}
+.map-pop{position:absolute;left:0;top:0;z-index:3;width:min(270px,calc(100vw - 24px));padding:14px 16px;border-radius:14px;background:#0a1a3a;border:1px solid var(--line-strong);box-shadow:var(--shadow)}
+.map-pop h4{font-size:14px;font-weight:700;margin-bottom:8px}
+.map-pop ul{list-style:none;display:grid;gap:6px;font-size:13px;line-height:1.35;color:var(--muted)}
+.pop-more{display:block;width:100%;margin-top:3px;padding:8px 10px;border:1px solid rgba(255,210,122,.45);border-radius:10px;background:rgba(255,210,122,.1);color:#fff;font:600 13px/1.3 var(--font);text-align:left;cursor:pointer}
+.pop-more:hover{background:rgba(255,210,122,.2)}
+.pop-more span{display:block;font-weight:400;font-size:12px;color:#ffd27a}
+.merchant-card{position:fixed;margin:auto;width:min(460px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;padding:30px;border:1px solid var(--line-strong);border-radius:var(--radius-lg);background:#0a1a3a;color:var(--ink);box-shadow:var(--shadow)}
+.merchant-card::backdrop{background:rgba(2,4,12,.72)}
+.merchant-gallery{position:relative;margin:-30px -30px 20px;overflow:hidden;background:#04060f;touch-action:pan-y}
+.gallery-stage{position:relative;aspect-ratio:16/9;overflow:hidden;cursor:zoom-in}
+.gallery-stage img{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;opacity:0;transition:opacity .35s ease,transform .25s ease;user-select:none;-webkit-user-drag:none}
+.gallery-stage img.on{opacity:1}
+.gallery-arrow{position:absolute;top:calc(50% - 34px);width:38px;height:38px;border:0;border-radius:50%;background:rgba(4,10,28,.72);color:#fff;font:400 24px/1 var(--font);cursor:pointer}
+.gallery-arrow:hover{background:#0175ff}
+.gallery-arrow.prev{left:10px}
+.gallery-arrow.next{right:10px}
+.merchant-card .gallery-caption{display:flex;justify-content:space-between;gap:12px;padding:8px 14px;font-size:12.5px;line-height:1.3;color:var(--ink);background:#04060f}
+.gallery-count{color:var(--muted);white-space:nowrap}
+.merchant-card h3{font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+.merchant-card .eyebrow{margin-bottom:10px}
+.merchant-card p,.merchant-card li{font-size:15px;line-height:1.6;color:var(--muted)}
+.merchant-card .merchant-now{margin:6px 0 14px;font-size:14px;color:var(--accent)}
+.merchant-card ul{margin:12px 0 22px 18px}
+.merchant-links{display:flex;flex-wrap:wrap;gap:10px}
+.merchant-links .btn{font-size:14px;padding:10px 16px}
+.card-close{position:absolute;z-index:2;right:14px;top:12px;width:34px;height:34px;border:0;border-radius:50%;background:rgba(4,10,28,.72);color:#fff;font:400 22px/1 var(--font);cursor:pointer}
 .site-footer{position:relative;z-index:3;background:#04060f;border-top:1px solid var(--line);padding:36px 24px 22px}
 .footer{display:flex;justify-content:space-between;gap:32px 48px;flex-wrap:wrap;max-width:calc(var(--maxw) - 48px);margin:0 auto}
 .footer-brand{max-width:280px}
@@ -315,7 +345,33 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
     <p class="copyright">© <span id="year"></span> All Clear Process Systems. All rights reserved.</p>
   </footer>
 </div>
-<div class="map-labels" id="map-labels" aria-hidden="true"></div>
+<div class="map-labels" id="map-labels"><div class="map-pop" id="map-pop" hidden></div></div>
+<dialog class="merchant-card" id="merchant-card" aria-labelledby="merchant-name" data-lenis-prevent>
+  <button class="card-close" type="button" id="merchant-close" aria-label="Close">×</button>
+  <div class="merchant-gallery" id="merchant-gallery" role="group" aria-label="Photos of Makos">
+    <div class="gallery-stage" id="gallery-stage">
+      <img class="on" src="https://makosonthewater.com/wp-content/uploads/2026/10/makosrestaurant-shark-bar-768x448.jpg" alt="Aerial view of Makos and the Shark Bar on the Intracoastal Waterway" data-caption="Makos and the Shark Bar from above" width="768" height="448" referrerpolicy="no-referrer">
+      <img src="https://makosonthewater.com/wp-content/uploads/2025/12/makos-restaurant-bar-grill-sc-2-768x432.jpg" alt="Dining table on the patio overlooking the Intracoastal Waterway" data-caption="Patio dining on the water" width="768" height="432" referrerpolicy="no-referrer">
+    </div>
+    <button class="gallery-arrow prev" type="button" id="gallery-prev" aria-label="Previous photo">‹</button>
+    <button class="gallery-arrow next" type="button" id="gallery-next" aria-label="Next photo">›</button>
+    <p class="gallery-caption"><span id="gallery-caption" aria-live="polite">Makos and the Shark Bar from above</span><span class="gallery-count" id="gallery-count">1 / 2</span></p>
+  </div>
+  <span class="eyebrow">Little River, SC</span>
+  <h3 id="merchant-name">Makos Marina Bar &amp; Grill</h3>
+  <p class="merchant-now">Now known as Makos On The Water</p>
+  <p>Coastal dining on the Intracoastal Waterway, just north of Myrtle Beach, with seafood, steaks, and a relaxed, flip-flop-friendly feel.</p>
+  <ul>
+    <li>Shrimp and grits and local flounder</li>
+    <li>Shark Bar tiki bar with waterfront seating</li>
+    <li>Boat-up dining and private events</li>
+  </ul>
+  <div class="merchant-links">
+    <a class="btn btn-primary" href="https://makosonthewater.com/" target="_blank" rel="noopener">Visit website</a>
+    <a class="btn btn-outline" href="https://makosonthewater.com/menu/" target="_blank" rel="noopener">View menu</a>
+    <a class="btn btn-outline" href="https://www.opentable.com/r/makos-bar-and-grill-little-river" target="_blank" rel="noopener">Reserve a table</a>
+  </div>
+</dialog>
 
 <script type="module">
 /* Page behavior. Kept apart from the WebGL module so the content works even if a CDN fails. */
@@ -338,6 +394,133 @@ copyBtn.addEventListener('click', async () => {
   catch { copyBtn.textContent = '(854) 894-6323'; }
   setTimeout(() => { copyBtn.textContent = 'Copy Number'; }, 2400);
 });
+
+/* Map pop-ups: hover or focus to preview, click or tap to keep open */
+const pop = document.getElementById('map-pop');
+const card = document.getElementById('merchant-card');
+const uiItems = [];
+let openItem = null, keepOpen = false, closeTimer = 0;
+function closePop() {
+  clearTimeout(closeTimer);
+  if (openItem) { openItem.label.setAttribute('aria-expanded', 'false'); openItem = null; }
+  keepOpen = false; pop.hidden = true;
+}
+const closeSoon = () => { clearTimeout(closeTimer); if (!keepOpen) closeTimer = setTimeout(closePop, 220); };
+function renderPop(item) {
+  pop.replaceChildren();
+  const h = document.createElement('h4'); h.textContent = item.data.name;
+  const list = document.createElement('ul');
+  item.data.places.forEach((place) => {
+    const li = document.createElement('li');
+    if (place.merchant) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'pop-more';
+      b.textContent = place.merchant;
+      const sub = document.createElement('span'); sub.textContent = place.name + ' · See more';
+      b.appendChild(sub);
+      b.addEventListener('click', () => { closePop(); card.showModal(); });
+      li.appendChild(b);
+    } else li.textContent = place;
+    list.appendChild(li);
+  });
+  pop.append(h, list);
+}
+function placePop() {
+  if (!openItem) return;
+  const w = pop.offsetWidth, h = pop.offsetHeight, top = navBar.offsetHeight + 8;
+  const x = Math.min(innerWidth - w - 12, Math.max(12, openItem.x - w / 2));
+  const above = openItem.y - h - 18;
+  pop.style.transform = `translate(${x}px,${above >= top ? above : openItem.y + 34}px)`;
+}
+function openPop(item, keep) {
+  clearTimeout(closeTimer);
+  if (openItem !== item) {
+    if (openItem) openItem.label.setAttribute('aria-expanded', 'false');
+    openItem = item; renderPop(item); pop.hidden = false;
+    item.label.setAttribute('aria-expanded', 'true');
+  }
+  keepOpen = keepOpen || keep;
+  placePop();
+}
+window.mapUI = {
+  add(data, layer) {
+    const item = { data, x: 0, y: 0 };
+    item.label = Object.assign(document.createElement('button'), { type: 'button', className: 'map-label', textContent: data.name });
+    item.label.setAttribute('aria-expanded', 'false');
+    item.pin = Object.assign(document.createElement('button'), { type: 'button', className: 'map-pin' });
+    item.pin.setAttribute('aria-label', data.name);
+    [item.label, item.pin].forEach((el) => {
+      el.addEventListener('pointerenter', () => openPop(item, false));
+      el.addEventListener('pointerleave', closeSoon);
+      el.addEventListener('focus', () => openPop(item, false));
+      el.addEventListener('click', (ev) => { ev.stopPropagation(); keepOpen = false; openPop(item, true); });
+      layer.appendChild(el);
+    });
+    item.place = (x, y) => {
+      item.x = x; item.y = y;
+      item.pin.style.transform = `translate(${x - 15}px,${y - 15}px)`;
+      if (openItem === item) placePop();
+    };
+    uiItems.push(item);
+    return item;
+  },
+  sync(alpha) {
+    pop.parentElement.classList.toggle('live', alpha > 0.6);
+    if (alpha < 0.6 && openItem) closePop();
+  },
+};
+pop.addEventListener('pointerenter', () => clearTimeout(closeTimer));
+pop.addEventListener('pointerleave', closeSoon);
+document.addEventListener('click', (ev) => { if (openItem && !pop.contains(ev.target)) closePop(); });
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') closePop(); });
+document.getElementById('merchant-close').addEventListener('click', () => card.close());
+card.addEventListener('click', (ev) => { if (ev.target === card) card.close(); });
+
+/* Makos photos: arrows, arrow keys, swipe, and hover or tap to zoom */
+const gallery = document.getElementById('merchant-gallery');
+const stage = document.getElementById('gallery-stage');
+let photos = [...stage.querySelectorAll('img')], photoIndex = 0;
+function showPhoto(i) {
+  if (!photos.length) return;
+  photoIndex = (i + photos.length) % photos.length;
+  photos.forEach((img, n) => { img.classList.toggle('on', n === photoIndex); img.style.transform = ''; });
+  document.getElementById('gallery-caption').textContent = photos[photoIndex].dataset.caption;
+  document.getElementById('gallery-count').textContent = `${photoIndex + 1} / ${photos.length}`;
+  document.getElementById('gallery-count').hidden = photos.length < 2;
+  gallery.querySelectorAll('.gallery-arrow').forEach((b) => { b.hidden = photos.length < 2; });
+}
+const dropPhoto = (img) => {
+  photos = photos.filter((p) => p !== img); img.remove();
+  if (photos.length) showPhoto(photoIndex); else gallery.hidden = true;
+};
+[...photos].forEach((img) => {
+  if (img.complete && !img.naturalWidth) dropPhoto(img); /* it failed before this script ran */
+  else img.addEventListener('error', () => dropPhoto(img));
+});
+document.getElementById('gallery-prev').addEventListener('click', () => showPhoto(photoIndex - 1));
+document.getElementById('gallery-next').addEventListener('click', () => showPhoto(photoIndex + 1));
+gallery.addEventListener('keydown', (ev) => {
+  if (ev.key === 'ArrowLeft') showPhoto(photoIndex - 1);
+  if (ev.key === 'ArrowRight') showPhoto(photoIndex + 1);
+});
+let swipeX = null, zoomed = false;
+const zoomAt = (ev) => {
+  const r = stage.getBoundingClientRect(), img = photos[photoIndex];
+  if (!img) return;
+  img.style.transformOrigin = `${(ev.clientX - r.left) / r.width * 100}% ${(ev.clientY - r.top) / r.height * 100}%`;
+  img.style.transform = 'scale(1.8)';
+};
+stage.addEventListener('pointerdown', (ev) => { swipeX = ev.clientX; });
+stage.addEventListener('pointerup', (ev) => {
+  const moved = swipeX === null ? 0 : ev.clientX - swipeX;
+  swipeX = null;
+  if (ev.pointerType === 'mouse') return;
+  if (Math.abs(moved) > 40) { zoomed = false; showPhoto(photoIndex + (moved < 0 ? 1 : -1)); return; }
+  zoomed = !zoomed;
+  if (zoomed) zoomAt(ev); else if (photos[photoIndex]) photos[photoIndex].style.transform = '';
+});
+stage.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse') zoomAt(ev); });
+stage.addEventListener('pointerleave', (ev) => { if (ev.pointerType === 'mouse' && photos[photoIndex]) photos[photoIndex].style.transform = ''; });
 
 /* Navigation: tabs, scroll position, and the plane that flies between them */
 let lenis = null;
@@ -600,16 +783,17 @@ function sample(stops, p) {
 const MERCHANTS = [
   [33.69,-78.89],[33.82,-78.68],[33.55,-79.04],[33.61,-78.97], /* Grand Strand: Myrtle Beach, North Myrtle Beach, Murrells Inlet, Surfside Beach */
   [33.84,-79.05],  /* Conway, SC */
+  [33.87,-78.62],  /* Little River, SC */
   [39.53,-91.00],  /* Rockport, IL */
   [40.79,-73.20],  /* Central Islip, NY */
   [35.96,-80.00],  /* High Point, NC */
   [36.07,-79.79],  /* Greensboro, NC */
 ];
 const MERCHANT_LABELS = [
-  { name:'Grand Strand & Conway, SC', lat:33.7, lon:-78.9, side:'right' },
-  { name:'High Point & Greensboro, NC', lat:36.0, lon:-79.9, side:'left' },
-  { name:'Rockport, IL', lat:39.53, lon:-91.0, side:'left' },
-  { name:'Central Islip, NY', lat:40.79, lon:-73.2, side:'left' },
+  { name:'Grand Strand & Conway, SC', lat:33.7, lon:-78.9, side:'right', places:['Myrtle Beach, SC','North Myrtle Beach, SC','Surfside Beach, SC','Murrells Inlet, SC','Conway, SC',{ name:'Little River, SC', merchant:'Makos Marina Bar & Grill' }] },
+  { name:'High Point & Greensboro, NC', lat:36.0, lon:-79.9, side:'left', places:['High Point, NC','Greensboro, NC'] },
+  { name:'Rockport, IL', lat:39.53, lon:-91.0, side:'left', places:['Rockport, IL'] },
+  { name:'Central Islip, NY', lat:40.79, lon:-73.2, side:'left', places:['Central Islip, NY'] },
 ];
 /* Cities across the country, kept visually and verbally separate from current merchants by the legend. */
 const MARKETS = [
@@ -1012,12 +1196,9 @@ async function main() {
     planetGroup.add(dots);
   }
   const labelLayer = document.getElementById('map-labels');
-  const labels = MERCHANT_LABELS.map((item) => {
-    const el = document.createElement('span');
-    el.className = 'map-label'; el.textContent = item.name;
-    labelLayer.appendChild(el);
-    return { el, side: item.side, at: geoDir(item.lat, item.lon).multiplyScalar(pinRadius) };
-  });
+  const labels = MERCHANT_LABELS.map((item) => ({
+    ui: window.mapUI.add(item, labelLayer), side: item.side, at: geoDir(item.lat, item.lon).multiplyScalar(pinRadius),
+  }));
 
   /* planet */
   function applyPlanetMaterial(mesh, nightTex) {
@@ -1166,12 +1347,15 @@ let contextLost = false, skipFrame = false;
   const labelPoint = new THREE.Vector3();
   function updateLabels(alpha) {
     labelLayer.style.visibility = alpha > 0 ? 'visible' : 'hidden';
+    window.mapUI.sync(alpha);
     if (alpha <= 0) return;
     labelLayer.style.opacity = alpha;
     planetGroup.updateWorldMatrix(true, false);
-    labels.forEach(({ el, side, at }) => {
+    labels.forEach(({ ui, side, at }) => {
+      const el = ui.label;
       labelPoint.copy(at).applyMatrix4(planetGroup.matrixWorld).project(camera);
       const x = (labelPoint.x + 1) / 2 * innerWidth, y = (1 - labelPoint.y) / 2 * innerHeight;
+      ui.place(x, y);
       const w = el.offsetWidth;
       if (side === 'right' && x + 12 + w > innerWidth - 8) el.style.transform = `translate(${innerWidth - 8 - w}px,${y + 12}px)`;
       else if (side === 'left') el.style.transform = `translate(${Math.max(8, x - 12 - w)}px,calc(${y}px - 50%))`;
