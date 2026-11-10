@@ -87,6 +87,10 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 .nav-bar{position:fixed;top:0;left:0;right:0;z-index:20;padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid transparent;transition:background .3s ease,border-color .3s ease}
 .nav-bar.scrolled{background:rgba(4,6,15,.76);border-bottom-color:var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .nav{width:100%;max-width:var(--maxw);margin:0 auto;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px 20px}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.nav-login{border-color:var(--accent-2);color:#fff}
+.nav-login:hover{background:rgba(1,117,255,.22)}
+.nav-phone .short{display:none}
 .nav-links{position:relative;display:flex;align-items:center;gap:6px;font-size:14.5px;color:var(--muted)}
 .tab{position:relative;display:block;padding:12px 13px 21px;white-space:nowrap;border-radius:8px;transition:color .2s ease}
 .tab:hover,.tab[aria-current="true"]{color:var(--ink)}
@@ -199,9 +203,16 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
   .showcase-copy{text-align:center}
   .stats{grid-template-columns:repeat(2,1fr)}
 }
+@media (max-width:1080px){
+  .nav{flex-wrap:wrap}
+  .nav-links{order:3;width:100%;justify-content:space-around}
+}
 @media (max-width:720px){
-  .nav{padding:8px 16px 4px;flex-wrap:wrap}
-  .nav-links{order:3;width:100%;justify-content:space-between;gap:0;font-size:13px;--plane-w:66px}
+  .nav{padding:8px 16px 4px}
+  .nav-phone .long{display:none}
+  .nav-phone .short{display:inline}
+  .nav-actions .btn{padding:8px 13px;font-size:13.5px}
+  .nav-links{justify-content:space-between;gap:0;font-size:13px;--plane-w:66px}
   .tab{padding:9px 7px 18px}
   .section{padding:clamp(64px,16vw,110px) 20px}
   .map-section{padding-left:16px;padding-right:16px}
@@ -220,9 +231,18 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
 @media (max-width:380px){
   .stats{grid-template-columns:1fr}
   .logo{font-size:15px}
-  .nav .btn-ghost{padding:8px 12px;font-size:13.5px}
+  .nav .nav-actions .btn{padding:7px 10px;font-size:13px}
+  .nav-actions{gap:6px}
+  .brand .brand-logo{width:118px;height:40px}
   .nav-links{font-size:12px}
   .tab{padding:9px 4px 18px}
+}
+@media (max-width:340px){
+  .nav{padding-left:12px;padding-right:12px}
+  .brand .brand-logo{width:100px;height:34px}
+  .nav-links{font-size:11px;--plane-w:56px}
+  .tab{padding:9px 2px 18px}
+  .footer-cols{flex-wrap:wrap}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -261,7 +281,10 @@ svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
           <svg class="plane-trail" aria-hidden="true"><polyline id="plane-trail" points=""/></svg>
           <span class="plane" id="plane" aria-hidden="true"></span>
         </div>
-        <a class="btn btn-ghost" href="tel:+18548946323">(854) 894-6323</a>
+        <div class="nav-actions">
+          <a class="btn btn-ghost nav-phone" href="tel:+18548946323"><span class="long">(854) 894-6323</span><span class="short">Call</span></a>
+          <a class="btn btn-ghost nav-login" href="https://portal.allclearprocesssystems.com">Reseller Login</a>
+        </div>
       </nav>
     </div>
     <div class="hero-inner">
